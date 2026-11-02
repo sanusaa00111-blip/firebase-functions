@@ -98,11 +98,16 @@ app.use((req, res, next) => {
     next();
 });
 
+
 const googleAuth = new GoogleAuth({
+    credentials: process.env.FIREBASE_SERVICE_ACCOUNT_JSON
+        ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON)
+        : undefined,
     scopes: [
         "https://www.googleapis.com/auth/firebase.messaging"
     ]
 });
+
 
 let authClientPromise = null;
 let accessTokenCache = null;
@@ -313,7 +318,11 @@ app.post("/send-command", async (req, res) => {
             });
         }
 
-        const projectId = process.env.GCLOUD_PROJECT;
+        
+const projectId =
+    process.env.FIREBASE_PROJECT_ID ||
+    process.env.GCLOUD_PROJECT;
+
 
         if (!projectId) {
             throw new Error("Firebase project ID unavailable");
