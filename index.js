@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const https = require("https");
 const { GoogleAuth } = require("google-auth-library");
-const { onRequest } = require("firebase-functions/v2/https");
+
 
 
 const { initializeApp, getApps, cert } = require("firebase-admin/app");
@@ -535,13 +535,4 @@ app.post("/search-test-messages", async (req, res) => {
 });
 
 
-exports.api = onRequest({
-    region: "us-central1",
-    maxInstances: 10,
-    concurrency: 80,
-    cpu: 1,
-    memory: "256MiB",
-    minInstances: 1,
-    timeoutSeconds: 30,
-    cors: ["https://customer-service-apk.web.app"]
-}, app);
+module.exports = app;
