@@ -11,20 +11,30 @@ const { getDatabase } = require("firebase-admin/database");
 const { getAuth } = require("firebase-admin/auth");
 
 
+
 if (getApps().length === 0) {
     const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+
+    const databaseURL = process.env.FIREBASE_DATABASE_URL;
+
+    if (!databaseURL) {
+        throw new Error("FIREBASE_DATABASE_URL environment variable is required");
+    }
 
     if (serviceAccountJson) {
         const serviceAccount = JSON.parse(serviceAccountJson);
 
         initializeApp({
             credential: cert(serviceAccount),
-            databaseURL: process.env.FIREBASE_DATABASE_URL
+            databaseURL
         });
     } else {
-        initializeApp();
+        initializeApp({
+            databaseURL
+        });
     }
 }
+
 
 
 const database = getDatabase();
